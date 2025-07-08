@@ -12,4 +12,3 @@ const NewCompanion = () => {
 };
 
 export default NewCompanion;
-// https://youtu.be/XUkNR-JfHwo?t=6856

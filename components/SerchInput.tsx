@@ -1,6 +1,6 @@
 "use client";
 
-import { formUrlQuery } from "@jsmastery/utils";
+import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -14,15 +14,25 @@ const SerchInput = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    if (searchQuery) {
-      //   router.push(`/currentRoute?topic=${searchQuery}`);
-      const newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: "topic",
-        value: searchQuery,
-      });
-      router.push(newUrl, { scroll: false });
-    }
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        //   router.push(`/currentRoute?topic=${searchQuery}`);
+        const newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: "topic",
+          value: searchQuery,
+        });
+        router.push(newUrl, { scroll: false });
+      } else {
+        if (pathname === "/companions") {
+          const newUrl = removeKeysFromUrlQuery({
+            params: searchParams.toString(),
+            keysToRemove: ["topic"],
+          });
+          router.push(newUrl, { scroll: false });
+        }
+      }
+    }, 500);
   }, [searchQuery, router, searchParams, pathname]);
 
   return (
@@ -39,3 +49,4 @@ const SerchInput = () => {
 };
 
 export default SerchInput;
+// https://youtu.be/XUkNR-JfHwo?t=8233
